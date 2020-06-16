@@ -1,0 +1,17 @@
+{
+  "name": "copytesting",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "development": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "gapi-script": "^1.0.2",
+    "react-bootstrap": "^1.0.1",
+    "react-router-dom": "^5.2.0"
+  }
+}
