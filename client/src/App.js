@@ -1,45 +1,42 @@
 import React, { Component } from 'react';
-import {BrowserRouter, Switch, Route, Link} from 'react-router-dom'
+import {BrowserRouter, Switch, Route, Link } from 'react-router-dom'
 import AuthenticateComponent from './Authenticate/AuthenticateComponent'
 import UserDataComponent from "./UserData/UserDataComponent";
 import UserManagementComponent from "./UserData/UserManagementComponent";
+
 import './App.css';
 
 class App extends Component {
     state = {
-        isSignedIn: null
+        isSignedIn: null,
+        signOut: null,
+        userData: null,
     };
 
-
-    // Fetches our GET route from the Express server. (Note the route we are fetching matches the GET route from server.js
-    // callBackendAPI = async () => {
-    //     const response = await fetch('/express_backend');
-    //     const body = await response.json();
-    //
-    //     if (response.status !== 200) {
-    //         throw Error(body.message)
-    //     }
-    //     return body;
-    // };
-
-    onSignIn(isSignedIn) {
-        this.setState({isSignedIn})
+    onSignIn(isSignedIn, signOut, userData) {
+        this.setState({isSignedIn, signOut, userData});
     }
 
-    ifUserSignedIn(Component) {
+    signOut() {
+        this.state.signOut();
+        window.location.reload(false);
+    }
+
+    ifUserSignedIn(Component, props) {
         return this.state.isSignedIn ?
-            <Component/> :
+            <Component {...props}/> :
             <AuthenticateComponent isSignedIn={this.state.isSignedIn} signIn={this.onSignIn.bind(this)}/>
     }
 
     render() {
         return (
             <BrowserRouter>
-                { this.state.isSignedIn && <Link to="/edit">Edit</Link> }
                 <Link to="/">Home</Link>
+                { this.state.isSignedIn && <Link to="/edit">Edit</Link> }
+                { this.state.isSignedIn && <Link to="/" onClick={this.signOut.bind(this)}>SignOut</Link> }
                 <Switch>
                     <Route path="/edit" render={() => this.ifUserSignedIn(UserManagementComponent)} />
-                    <Route path="/" render={() => this.ifUserSignedIn(UserDataComponent)} />
+                    <Route path="/" render={() => this.ifUserSignedIn(UserDataComponent, this.state.userData)} />
                 </Switch>
             </BrowserRouter>
         )
