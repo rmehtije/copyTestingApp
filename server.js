@@ -1,10 +1,11 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT;
 const mongoose = require('mongoose');
 
 mongoose.connect(process.env.DATABASE_URL, { useUnifiedTopology: true, useNewUrlParser: true });
+mongoose.set('useCreateIndex', true);
 const db = mongoose.connection;
 
 db.on('error', (error) => console.error(error));

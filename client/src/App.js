@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import {BrowserRouter, Switch, Route, Link } from 'react-router-dom'
+import { MemoryRouter, Switch, Route, Link } from 'react-router-dom'
 import AuthenticateComponent from './Authenticate/AuthenticateComponent'
 import UserDataComponent from "./UserData/UserDataComponent";
-import UserManagementComponent from "./UserData/UserManagementComponent";
+
+// react-bootstrap
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
 
 import './App.css';
 
@@ -19,7 +22,7 @@ class App extends Component {
 
     signOut() {
         this.state.signOut();
-        window.location.reload(false);
+        window.location.reload();
     }
 
     ifUserSignedIn(Component, props) {
@@ -29,16 +32,24 @@ class App extends Component {
     }
 
     render() {
+        const userNavigation = (
+            <Nav className="justify-content-center">
+                <Nav.Item><Nav.Link as={Link} to="/">Home</Nav.Link></Nav.Item>
+                <Nav.Item><Nav.Link as={Link} to="/edit">Edit</Nav.Link></Nav.Item>
+                <Nav.Item><Nav.Link to="/" onClick={this.signOut.bind(this)}>SignOut</Nav.Link></Nav.Item>
+            </Nav>
+        );
         return (
-            <BrowserRouter>
-                <Link to="/">Home</Link>
-                { this.state.isSignedIn && <Link to="/edit">Edit</Link> }
-                { this.state.isSignedIn && <Link to="/" onClick={this.signOut.bind(this)}>SignOut</Link> }
-                <Switch>
-                    <Route path="/edit" render={() => this.ifUserSignedIn(UserManagementComponent)} />
-                    <Route path="/" render={() => this.ifUserSignedIn(UserDataComponent, this.state.userData)} />
-                </Switch>
-            </BrowserRouter>
+            <MemoryRouter>
+                <Container>
+                        { this.state.isSignedIn && userNavigation }
+
+                        <Switch>
+                            <Route path="/edit" render={() => this.ifUserSignedIn(UserDataComponent, { ...this.state, edit: true, signOut: this.signOut.bind(this) })} />
+                            <Route path="/" render={() => this.ifUserSignedIn(UserDataComponent, { ...this.state, signOut: this.signOut.bind(this) })} />
+                        </Switch>
+                </Container>
+            </MemoryRouter>
         )
     }
 }

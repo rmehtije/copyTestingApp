@@ -17,24 +17,30 @@ class AuthenticateComponent extends Component {
                         return authInstance.disconnect();
                     });
                 };
+
+                const getUserData = (profile) => {
+                    return {
+                        name: profile.getName(),
+                        email: profile.getEmail(),
+                        imageUrl: profile.getImageUrl(),
+                    };
+                };
+
                 let userData = null;
 
                 if(isSignedIn) {
                     const user = authInstance.currentUser.get();
                     const profile = user.getBasicProfile();
 
-                    userData = {
-                        name: profile.getName(),
-                        email: profile.getEmail(),
-                        imageUrl: profile.getImageUrl(),
-                    };
+                    userData = getUserData(profile);
                 }
 
                 this.props.signIn(isSignedIn, signOut, userData);
 
                 if(!isSignedIn) {
-                    authInstance.isSignedIn.listen(isSignedIn => {
-                        this.props.signIn(isSignedIn, signOut, userData);
+                    authInstance.currentUser.listen(currentUser => {
+                        userData = getUserData(currentUser.getBasicProfile());
+                        this.props.signIn({isSignedIn: true}, signOut, userData);
                     });
 
                     gapi.load('signin2', () => {
@@ -46,20 +52,18 @@ class AuthenticateComponent extends Component {
     }
 
     render() {
-        if (this.props.isSignedIn === null) {
-            return (
-                <div className="App">
-                    Checking if you are signed in...
-                </div>
-            );
-        }
-        else {
-            return (
-                <div className="App">
-                    <div id="loginButton">Sign in with Google</div>
-                </div>
-            );
-        }
+        const loginButton = (<div id="loginButton" className="mx-auto">Sign in with Google</div>);
+        const checkLoginMessage = 'Checking if you are signed in...';
+
+        return (
+            <div className="py-2 text-center">
+                <img className="d-block mx-auto mb-1" src={process.env.PUBLIC_URL + '/images/logo.png'} alt="CopyTesting"/>
+                <p className="lead">
+                    Welcome
+                </p>
+                {this.props.isSignedIn === null ? checkLoginMessage : loginButton}
+            </div>
+        );
 
     }
 }
