@@ -21,8 +21,6 @@ class UserManagementComponent extends Component {
 
         this.state = { ...formInputs, ...this.props.userData, showModal: false };
 
-        console.log(this.props);
-
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.showModal = this.showModal.bind(this);

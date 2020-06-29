@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import UserManagementComponent from "./UserManagementComponent";
 
+import moment from 'moment';
+
 import Table from 'react-bootstrap/Table';
 
 class UserDataComponent extends Component {
@@ -38,7 +40,7 @@ class UserDataComponent extends Component {
                 <div className="py-3 text-center">
                     <img src={this.state.userData.imageUrl} alt="profile"/>
                     <h3>{this.state.userData.name}</h3>
-                    <Table responsive>
+                    <Table responsive className="table-striped text-left">
                         <tbody>
                             <tr>
                                 <td>Email:</td>
@@ -58,7 +60,7 @@ class UserDataComponent extends Component {
                             </tr>
                             <tr>
                                 <td>Created:</td>
-                                <td>{this.state.userData.created}</td>
+                                <td>{moment(this.state.userData.created).format("MMM Do YYYY")}</td>
                             </tr>
                         </tbody>
                     </Table>
